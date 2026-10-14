@@ -1,0 +1,189 @@
+
+{% extends "base.html" %}
+
+{% block title %}Головна | Trainer Pro{% endblock %}
+{% block page_heading %}Головна панель{% endblock %}
+
+{% block content %}
+
+<div class="welcome-row">
+    <div>
+        <span class="section-kicker">ТВОЯ РОБОЧА ПРОСТОРА</span>
+        <h1>Вітаємо, тренере! <span class="orange">✦</span></h1>
+        <p class="muted">Усе управління тренуваннями в одному місці.</p>
+    </div>
+
+    <a href="{{ url_for('calendar') }}" class="btn btn-primary">
+        <span>＋</span> Переглянути календар
+    </a>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Усього шкіл</span>
+            <span class="stat-icon orange-bg">▤</span>
+        </div>
+        <div class="stat-number">{{ stats.schools }}</div>
+        <div class="stat-bottom">Навчальні заклади</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Усього груп</span>
+            <span class="stat-icon purple-bg">▦</span>
+        </div>
+        <div class="stat-number">{{ stats.groups }}</div>
+        <div class="stat-bottom">Тренувальні групи</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Усього учнів</span>
+            <span class="stat-icon blue-bg">♙</span>
+        </div>
+        <div class="stat-number">{{ stats.students }}</div>
+        <div class="stat-bottom">Зареєстровані діти</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">Оплати за місяць</span>
+            <span class="stat-icon green-bg">₴</span>
+        </div>
+        <div class="stat-number money-number">
+            {{ "{:,.0f}".format(stats.income).replace(",", " ") }} ₴
+        </div>
+        <div class="stat-bottom">Фактично внесені оплати</div>
+    </div>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <span class="section-kicker">РОЗКЛАД</span>
+                <h2>Найближчі тренування</h2>
+            </div>
+            <a href="{{ url_for('calendar') }}" class="text-link">
+                Увесь календар →
+            </a>
+        </div>
+
+        {% if upcoming %}
+            <div class="upcoming-list">
+                {% for training in upcoming %}
+                    <div class="upcoming-item">
+                        <div class="training-date">
+                            <span>{{ training.training_date[8:10] }}</span>
+                            <small>{{ training.training_date[5:7] }} міс.</small>
+                        </div>
+
+                        <div class="training-info">
+                            <strong>{{ training.group_name }}</strong>
+                            <span>{{ training.school_name }}</span>
+                            <small>
+                                {{ training.start_time }}
+                                {% if training.end_time %}
+                                    – {{ training.end_time }}
+                                {% endif %}
+                            </small>
+                        </div>
+
+                        <span class="training-dot"></span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">▦</div>
+                <h3>Поки немає тренувань</h3>
+                <p>Додай перше заняття у календарі.</p>
+                <a href="{{ url_for('calendar') }}" class="btn btn-primary">
+                    Відкрити календар
+                </a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <span class="section-kicker">ФІНАНСИ</span>
+                <h2>Останні оплати</h2>
+            </div>
+            <a href="{{ url_for('payments') }}" class="text-link">
+                Усі оплати →
+            </a>
+        </div>
+
+        {% if recent_payments %}
+            <div class="payments-list">
+                {% for payment in recent_payments %}
+                    <div class="payment-item">
+                        <div class="payment-avatar">
+                            {{ payment.full_name[0]|upper }}
+                        </div>
+
+                        <div class="payment-info">
+                            <strong>{{ payment.full_name }}</strong>
+                            <span>{{ payment.payment_date }}</span>
+                        </div>
+
+                        <div class="payment-amount">
+                            +{{ "{:,.0f}".format(payment.amount).replace(",", " ") }} ₴
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">₴</div>
+                <h3>Оплат поки немає</h3>
+                <p>Коли внесеш перший платіж, він з'явиться тут.</p>
+                <a href="{{ url_for('payments') }}" class="btn btn-primary">
+                    Додати оплату
+                </a>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+
+<div class="quick-actions">
+    <div>
+        <span class="section-kicker">ШВИДКИЙ ДОСТУП</span>
+        <h2>Що зробимо сьогодні?</h2>
+    </div>
+
+    <div class="quick-actions-list">
+        <a href="{{ url_for('school_add') }}" class="quick-action">
+            <span class="quick-action-icon">＋</span>
+            <span>Додати школу</span>
+            <span class="quick-arrow">→</span>
+        </a>
+
+        <a href="{{ url_for('group_add') }}" class="quick-action">
+            <span class="quick-action-icon">＋</span>
+            <span>Створити групу</span>
+            <span class="quick-arrow">→</span>
+        </a>
+
+        <a href="{{ url_for('student_add') }}" class="quick-action">
+            <span class="quick-action-icon">＋</span>
+            <span>Додати учня</span>
+            <span class="quick-arrow">→</span>
+        </a>
+
+        <a href="{{ url_for('payments') }}" class="quick-action">
+            <span class="quick-action-icon">₴</span>
+            <span>Записати оплату</span>
+            <span class="quick-arrow">→</span>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

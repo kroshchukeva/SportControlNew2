@@ -1,0 +1,493 @@
+
+/* ===== ОСНОВНІ КОЛЬОРИ ===== */
+:root {
+    --bg: #080d15;
+    --sidebar: #0d1521;
+    --panel: #111d2b;
+    --panel-hover: #172638;
+    --border: #263b50;
+    --orange: #ff8500;
+    --orange-hover: #ff9e2c;
+    --text: #f5f7fb;
+    --muted: #c1ccdc;
+    --green: #13a86b;
+    --red: #d92d48;
+    --input: #142234;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    color: #ffffff;
+    margin-top: 0;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 750;
+}
+
+h2 {
+    font-size: 23px;
+}
+
+h3 {
+    font-size: 19px;
+}
+
+p, li, td, th, label, span {
+    color: inherit;
+}
+
+p {
+    color: var(--muted);
+}
+
+a {
+    color: #ffab45;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffd09a;
+}
+
+/* ===== ОСНОВНИЙ КОНТЕЙНЕР ===== */
+.container,
+main,
+.content {
+    min-width: 0;
+}
+
+main,
+.content {
+    padding: 28px;
+}
+
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-header p {
+    margin-top: -10px;
+    color: var(--muted);
+}
+
+/* ===== КАРТКИ ТА ПАНЕЛІ ===== */
+.card,
+.panel,
+.stat-card {
+    background: linear-gradient(145deg, #132131, #0e1825);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.card h2,
+.panel h2 {
+    color: #ffffff;
+    margin-bottom: 18px;
+}
+
+.card:hover,
+.stat-card:hover {
+    border-color: #405a73;
+}
+
+/* ===== ФОРМИ ТА ПОЛЯ ===== */
+label {
+    display: block;
+    color: #f5f7fb;
+    font-weight: 650;
+    margin-bottom: 7px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 13px;
+    background: var(--input);
+    color: #ffffff;
+    border: 1px solid #40566e;
+    border-radius: 8px;
+    font: inherit;
+    outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #aab8ca;
+    opacity: 1;
+}
+
+select option {
+    background: #142234;
+    color: #ffffff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255, 133, 0, 0.17);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.form-grid button {
+    align-self: end;
+}
+
+.inline-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inline-form input {
+    min-width: 80px;
+    max-width: 130px;
+}
+
+/* ===== КНОПКИ ===== */
+button,
+.btn,
+input[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: var(--orange);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+button:hover,
+.btn:hover,
+input[type="submit"]:hover {
+    background: var(--orange-hover);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.btn-small {
+    min-height: 35px;
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+.btn-secondary {
+    background: #24364a;
+    border: 1px solid #40566e;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background: #334b63;
+}
+
+.btn-danger {
+    background: #bd263e;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: #e13a52;
+}
+
+/* ===== ТАБЛИЦІ ===== */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 9px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #f5f7fb;
+    background: rgba(8, 15, 24, 0.35);
+}
+
+thead {
+    background: #172638;
+}
+
+th {
+    color: #ffffff;
+    font-weight: 750;
+    text-align: left;
+    white-space: nowrap;
+}
+
+th, td {
+    padding: 13px 14px;
+    border: 1px solid #263b50;
+    vertical-align: middle;
+}
+
+td {
+    color: #e8edf5;
+}
+
+tbody tr:nth-child(even) {
+    background: rgba(35, 54, 75, 0.28);
+}
+
+tbody tr:hover {
+    background: rgba(255, 133, 0, 0.08);
+}
+
+/* ===== СТАТУСИ ОПЛАТИ ===== */
+.status-paid {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #087d50;
+    color: #ffffff;
+    border-radius: 30px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.status-unpaid {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #bd263e;
+    color: #ffffff;
+    border-radius: 30px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+/* ===== КАРТКИ ШКІЛ І ГРУП ===== */
+.schools-grid,
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.school-card,
+.group-card {
+    display: block;
+    padding: 22px;
+    background: linear-gradient(145deg, #17283a, #101a28);
+    border: 1px solid #30465c;
+    border-radius: 13px;
+    color: #ffffff;
+    transition: 0.2s;
+}
+
+.school-card:hover,
+.group-card:hover {
+    border-color: var(--orange);
+    background: #1b2b3c;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.school-card h2,
+.school-card h3,
+.group-card h2,
+.group-card h3 {
+    color: #ffffff;
+}
+
+.school-card p,
+.group-card p {
+    color: var(--muted);
+}
+
+/* ===== НАВІГАЦІЯ ===== */
+nav,
+.sidebar {
+    background: var(--sidebar);
+    color: #ffffff;
+}
+
+nav a,
+.sidebar a {
+    color: #e8edf5;
+}
+
+nav a:hover,
+.sidebar a:hover {
+    color: #ffffff;
+    background: #1b2b3c;
+}
+
+nav a.active,
+.sidebar a.active {
+    background: var(--orange);
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+/* ===== ПОВІДОМЛЕННЯ ===== */
+.alert,
+.flash-message {
+    padding: 13px 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background: #172638;
+    color: #ffffff;
+    border: 1px solid #40566e;
+}
+
+.error,
+.alert-error {
+    background: #421c29;
+    border-color: #bd263e;
+    color: #ffffff;
+}
+
+.success,
+.alert-success {
+    background: #103a2b;
+    border-color: #087d50;
+    color: #ffffff;
+}
+
+/* ===== КАЛЕНДАР ===== */
+.calendar,
+.calendar-grid,
+.calendar-day {
+    color: #ffffff;
+}
+
+.calendar-day,
+.calendar-cell {
+    background: #111d2b;
+    border: 1px solid #30465c;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.training,
+.training-item {
+    background: #422b16;
+    color: #ffffff;
+    border-left: 4px solid var(--orange);
+    border-radius: 6px;
+    padding: 9px 12px;
+    margin: 7px 0;
+}
+
+small,
+.text-muted,
+.muted {
+    color: var(--muted);
+}
+
+/* ===== АДАПТАЦІЯ ДЛЯ ТЕЛЕФОНІВ ===== */
+@media (max-width: 800px) {
+    main,
+    .content {
+        padding: 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .card,
+    .panel,
+    .stat-card {
+        padding: 16px;
+    }
+
+    .inline-form {
+        flex-wrap: wrap;
+    }
+}
+
+/* Окремі картки шкіл */
+.schools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+.school-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 24px;
+    background: linear-gradient(145deg, #172638, #0e1825);
+    border: 1px solid #30465c;
+    border-radius: 14px;
+    transition: 0.2s ease;
+}
+
+.school-card:hover {
+    border-color: #ff8500;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(255, 133, 0, 0.12);
+}
+
+.school-card h3 {
+    color: #ffffff;
+    font-size: 22px;
+    margin: 10px 0;
+}
+
+.school-card p {
+    color: #d4deea;
+    margin: 5px 0;
+}
+
+.school-card p strong {
+    color: #ffffff;
+}
+
+.school-icon {
+    font-size: 38px;
+}
+
+.school-open-btn {
+    margin-top: 18px;
+    width: 100%;
+    text-align: center;
+}

@@ -1,0 +1,156 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {% if school %}Спортсмени — {{ school['name'] }}{% else %}Спортсмени{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    {% if school %}
+        <a href="{{ url_for('school_detail', school_id=school['id']) }}"
+           class="btn btn-secondary">
+            ← Назад до школи
+        </a>
+        <h1 style="margin-top: 20px;">Спортсмени — {{ school['name'] }}</h1>
+        <p>Список спортсменів лише цієї школи.</p>
+    {% else %}
+        <h1>Спортсмени</h1>
+        <p>Обери школу, щоб працювати з її спортсменами окремо.</p>
+        <a href="{{ url_for('schools') }}" class="btn">
+            Перейти до шкіл
+        </a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Додати спортсмена</h2>
+
+    {% if groups %}
+    <form action="{{ url_for('student_add', school_id=school_id) }}"
+          method="POST"
+          class="form-grid">
+
+        <div class="form-group">
+            <label>ПІБ спортсмена</label>
+            <input type="text" name="full_name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Група</label>
+            <select name="group_id" required>
+                {% for group in groups %}
+                <option value="{{ group['id'] }}">
+                    {{ group['school_name'] }} — {{ group['name'] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Телефон батьків</label>
+            <input type="text" name="parent_phone">
+        </div>
+
+        <div class="form-group">
+            <label>Примітки</label>
+            <input type="text" name="notes">
+        </div>
+
+        <button type="submit" class="btn">Додати спортсмена</button>
+    </form>
+    {% else %}
+        <p>У цій школі ще немає груп. Спочатку додай групу.</p>
+        {% if school %}
+        <a href="{{ url_for('group_add', school_id=school['id']) }}"
+           class="btn">
+            + Додати групу
+        </a>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Список спортсменів</h2>
+
+    {% if students %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ПІБ</th>
+                    {% if not school %}<th>Школа</th>{% endif %}
+                    <th>Група</th>
+                    <th>Телефон</th>
+                    <th>Річний внесок (грн)</th>
+                    <th>Статус оплати</th>
+                    <th>Дата оплати</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student['full_name'] }}</td>
+                    {% if not school %}
+                    <td>{{ student['school_name'] }}</td>
+                    {% endif %}
+                    <td>{{ student['group_name'] }}</td>
+                    <td>{{ student['parent_phone'] }}</td>
+
+                    <td>
+                        <form action="{{ url_for('annual_fee_update', student_id=student['id'], school_id=school_id) }}"
+                              method="POST"
+                              class="inline-form">
+                            <input type="number"
+                                   name="amount"
+                                   min="0"
+                                   step="1"
+                                   value="{{ student['annual_fee_amount'] }}"
+                                   required>
+                            <button type="submit" class="btn btn-small">
+                                Зберегти
+                            </button>
+                        </form>
+                    </td>
+
+                    <td>
+                        {% if student['annual_fee_paid'] %}
+                            <span class="status-paid">Оплачено</span>
+                        {% else %}
+                            <span class="status-unpaid">Не оплачено</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if student['annual_fee_paid'] %}
+                            {{ student['annual_fee_date'] or '—' }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if student['annual_fee_paid'] %}
+                            <span>Оплата внесена</span>
+                        {% else %}
+                            <form action="{{ url_for('annual_fee_mark_paid', student_id=student['id'], school_id=school_id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Підтвердити оплату річного внеску?');">
+                                <button type="submit" class="btn btn-small">
+                                    Позначити оплаченим
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>У цій школі поки що немає спортсменів.</p>
+    {% endif %}
+</div>
+{% endblock %}

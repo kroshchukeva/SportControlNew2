@@ -1,0 +1,179 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}
+    {{ 'Редагувати групу' if group else 'Додати групу' }}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ 'Редагувати групу' if group else 'Нова група' }}</h1>
+        <p>Створи групу, обери школу та вкажи вартість занять.</p>
+    </div>
+
+    <a href="{{ url_for('groups') }}" class="btn btn-secondary">
+        ← Усі групи
+    </a>
+</div>
+
+<div class="card group-form-card">
+    <div class="card-header">
+        <h2>Інформація про групу</h2>
+        <p>Поля зі зірочкою * обов'язкові.</p>
+    </div>
+
+    <form method="POST">
+        <div class="form-group">
+            <label for="school_id">Школа *</label>
+
+            {% set current_school_id = selected_school_id|default(0)|int %}
+
+            {% if group %}
+                {% set current_school_id = group['school_id']|int %}
+            {% endif %}
+
+            <select id="school_id" name="school_id" required>
+                <option value="">Обери школу</option>
+
+                {% for school in schools %}
+                   ```html
+<option value="{{ school.id }}"
+    {% if current_school_id == school.id|int %}
+        selected="selected"
+    {% endif %}
+>
+    {{ school.name }}
+</option>
+```
+                {% endfor %}
+            </select>
+
+            <small>Група буде прив'язана до вибраної школи.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Назва групи *</label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="{{ group['name'] if group else '' }}"
+                placeholder="Наприклад, Молодша група"
+                maxlength="100"
+                required
+            >
+        </div>
+
+        <div class="price-section">
+            <h3>Вартість занять</h3>
+            <p>Вкажи ціни у гривнях. Якщо тариф не використовується, залиш 0.</p>
+
+            <div class="price-grid">
+                <div class="form-group">
+                    <label for="monthly_price">Місячний абонемент (грн)</label>
+                    <input
+                        type="number"
+                        id="monthly_price"
+                        name="monthly_price"
+                        min="0"
+                        step="1"
+                        value="{{ group['monthly_price'] if group else 0 }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="annual_price">Річний тариф групи (грн)</label>
+                    <input
+                        type="number"
+                        id="annual_price"
+                        name="annual_price"
+                        min="0"
+                        step="1"
+                        value="{{ group['annual_price'] if group else 0 }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="single_price">Разове заняття (грн)</label>
+                    <input
+                        type="number"
+                        id="single_price"
+                        name="single_price"
+                        min="0"
+                        step="1"
+                        value="{{ group['single_price'] if group else 0 }}"
+                        required
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn">
+                {{ 'Зберегти зміни' if group else '+ Створити групу' }}
+            </button>
+
+            <a href="{{ url_for('groups') }}" class="btn btn-secondary">
+                Скасувати
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.group-form-card {
+    max-width: 850px;
+}
+
+.group-form-card .card-header {
+    margin-bottom: 24px;
+}
+
+.group-form-card .card-header p,
+.group-form-card small,
+.price-section > p {
+    color: #c1ccdc;
+}
+
+.group-form-card small {
+    display: block;
+    margin-top: 7px;
+}
+
+.price-section {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #30465c;
+}
+
+.price-section h3 {
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+@media (max-width: 700px) {
+    .price-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+```

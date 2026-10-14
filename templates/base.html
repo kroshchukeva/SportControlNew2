@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Trainer Pro{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="app-layout">
+
+        <aside class="sidebar">
+            <a href="{{ url_for('dashboard') }}" class="brand">
+                <span class="brand-icon">T</span>
+                <span>
+                    <strong>TRAINER</strong>
+                    <small>PRO MANAGEMENT</small>
+                </span>
+            </a>
+
+            <div class="sidebar-label">ГОЛОВНЕ МЕНЮ</div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard') }}"
+                   class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <span class="nav-icon">⌂</span>
+                    Головна
+                </a>
+
+                <a href="{{ url_for('schools') }}"
+                   class="nav-link {% if request.endpoint in ['schools', 'school_add', 'school_edit'] %}active{% endif %}">
+                    <span class="nav-icon">▤</span>
+                    Школи
+                </a>
+
+                <a href="{{ url_for('groups') }}"
+                   class="nav-link {% if request.endpoint in ['groups', 'group_add', 'group_edit'] %}active{% endif %}">
+                    <span class="nav-icon">▦</span>
+                    Групи
+                </a>
+
+                <a href="{{ url_for('students') }}"
+                   class="nav-link {% if request.endpoint in ['students', 'student_add', 'student_edit'] %}active{% endif %}">
+                    <span class="nav-icon">♙</span>
+                    Учні
+                </a>
+
+                <a href="{{ url_for('calendar') }}"
+                   class="nav-link {% if request.endpoint in ['calendar', 'training_add', 'training_delete'] %}active{% endif %}">
+                    <span class="nav-icon">▦</span>
+                    Календар
+                </a>
+
+                <a href="{{ url_for('payments') }}"
+                   class="nav-link {% if request.endpoint == 'payments' %}active{% endif %}">
+                    <span class="nav-icon">₴</span>
+                    Оплати
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="trainer-avatar">Т</div>
+                <div class="trainer-info">
+                    <strong>Тренер</strong>
+                    <small>Панель керування</small>
+                </div>
+                <span class="online-dot"></span>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <span class="topbar-caption">СИСТЕМА УПРАВЛІННЯ</span>
+                    <h2>{% block page_heading %}Моя панель{% endblock %}</h2>
+                </div>
+
+                <div class="topbar-right">
+                    <span class="status-dot"></span>
+                    <span>Система активна</span>
+                    <div class="topbar-date">
+                        {{ now().strftime('%d.%m.%Y') }}
+                    </div>
+                </div>
+            </header>
+
+            <section class="page-content">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-container">
+                            {% for category, message in messages %}
+                                <div class="flash-message {{ category }}">
+                                    <span>{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+
+                <footer class="footer">
+                    <span>TRAINER PRO</span>
+                    <span>Панель керування тренера</span>
+                </footer>
+
+            </section>
+        </main>
+
+    </div>
+</body>
+</html>

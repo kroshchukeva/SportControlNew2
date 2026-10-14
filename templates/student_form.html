@@ -1,0 +1,102 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}{{ 'Редагувати учня' if student else 'Додати учня' }}{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>{{ 'Редагувати учня' if student else 'Новий учень' }}</h1>
+        <p>Інформація про дитину та її батьків.</p>
+    </div>
+
+    <a href="{{ url_for('students') }}" class="btn btn-secondary">
+        ← Назад
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Дані учня</h2>
+    </div>
+
+    {% if groups %}
+    <form method="POST">
+        <div class="form-group">
+            <label for="full_name">ПІБ дитини *</label>
+            <input
+                type="text"
+                id="full_name"
+                name="full_name"
+                value="{{ student['full_name'] if student else '' }}"
+                placeholder="Прізвище, ім'я та по батькові"
+                required
+            >
+        </div>
+
+
+<div class="form-group">
+    <label for="group_id">Група *</label>
+
+    <select id="group_id" name="group_id" required>
+        <option value="">Вибери групу</option>
+
+        {% for group in groups %}
+            {% if student and student['group_id'] == group['id'] %}
+                <option value="{{ group['id'] }}" selected>
+                    {{ group['name'] }}
+                </option>
+            {% else %}
+                <option value="{{ group['id'] }}">
+                    {{ group['name'] }}
+                </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</div>
+
+        <div class="form-group">
+            <label for="parent_phone">Телефон батьків</label>
+            <input
+                type="tel"
+                id="parent_phone"
+                name="parent_phone"
+                value="{{ student['parent_phone'] if student else '' }}"
+                placeholder="+380..."
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примітки</label>
+            <textarea
+                id="notes"
+                name="notes"
+                rows="4"
+                placeholder="Додаткова інформація"
+            >{% if student and student['notes'] %}{{ student['notes'] }}{% endif %}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {{ 'Зберегти зміни' if student else 'Додати учня' }}
+            </button>
+
+            <a href="{{ url_for('students') }}" class="btn btn-secondary">
+                Скасувати
+            </a>
+        </div>
+    </form>
+
+    {% else %}
+    <div class="empty-state">
+        <h3>Спочатку створи групу</h3>
+        <p>Щоб додати учня, потрібно спочатку створити школу та групу.</p>
+
+        <a href="{{ url_for('group_add') }}" class="btn btn-primary">
+            + Створити групу
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+```

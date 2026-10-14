@@ -1,0 +1,175 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Облік оплат{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>Облік оплат</h1>
+        <p>Контроль оплат учнів та історія платежів у гривнях.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Усього оплат</div>
+        <div class="stat-value">{{ total }} грн</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">Оплати цього місяця</div>
+        <div class="stat-value">{{ month_total }} грн</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Додати оплату</h2>
+    </div>
+
+    {% if students %}
+    <form method="POST" action="{{ url_for('payments') }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="student_id">Учень *</label>
+                <select id="student_id" name="student_id" required>
+                    <option value="">Обери учня</option>
+
+                    {% for student in students %}
+                    <option value="{{ student['id'] }}">
+                        {{ student['full_name'] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="payment_type">Тип оплати *</label>
+                <select id="payment_type" name="payment_type" required>
+                    <option value="monthly">Абонемент на місяць</option>
+                    <option value="annual">Абонемент на рік</option>
+                    <option value="single">Разове заняття</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Сума (грн) *</label>
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    min="1"
+                    step="1"
+                    placeholder="Наприклад, 1500"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="payment_date">Дата оплати *</label>
+                <input
+                    type="date"
+                    id="payment_date"
+                    name="payment_date"
+                    value={{ today }}
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="covered_month">Місяць, за який сплачено</label>
+                <input
+                    type="month"
+                    id="covered_month"
+                    name="covered_month"
+                >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примітки</label>
+            <textarea
+                id="notes"
+                name="notes"
+                rows="3"
+                placeholder="Наприклад, оплата за вересень"
+            ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            + Зберегти оплату
+        </button>
+    </form>
+    {% else %}
+    <div class="empty-state">
+        <h3>Учнів поки немає</h3>
+        <p>Спочатку створи школу, групу та додай учня.</p>
+
+        <a href="{{ url_for('student_add') }}" class="btn btn-primary">
+            + Додати учня
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Історія оплат</h2>
+        <span>Кількість платежів: {{ payments|length }}</span>
+    </div>
+
+    {% if payments %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Учень</th>
+                    <th>Група</th>
+                    <th>Тип оплати</th>
+                    <th>За період</th>
+                    <th>Сума</th>
+                    <th>Примітки</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment['payment_date'] }}</td>
+                    <td>{{ payment['full_name'] }}</td>
+                    <td>{{ payment['group_name'] }}</td>
+
+                    <td>
+                        {% if payment['payment_type'] == 'monthly' %}
+                            Місячний абонемент
+                        {% elif payment['payment_type'] == 'annual' %}
+                            Річний абонемент
+                        {% else %}
+                            Разове заняття
+                        {% endif %}
+                    </td>
+
+                    <td>{{ payment['covered_month'] or '—' }}</td>
+
+                    <td>
+                        <strong>{{ payment['amount'] }} грн</strong>
+                    </td>
+
+                    <td>{{ payment['notes'] or '—' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <h3>Оплат поки немає</h3>
+        <p>Додай перший платіж через форму вище.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+```

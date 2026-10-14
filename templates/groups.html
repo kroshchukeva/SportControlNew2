@@ -1,0 +1,94 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Групи{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>Групи</h1>
+        <p>Керування групами та вартістю занять.</p>
+    </div>
+
+    <a href="{{ url_for('group_add') }}" class="btn btn-primary">
+        + Додати групу
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Список груп</h2>
+        <span>Усього: {{ groups|length }}</span>
+    </div>
+
+    {% if groups %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Назва групи</th>
+                    <th>Школа</th>
+                    <th>Учнів</th>
+                    <th>За місяць</th>
+                    <th>За рік</th>
+                    <th>Разове заняття</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for group in groups %}
+                <tr>
+                    <td>
+                        <strong>{{ group['name'] }}</strong>
+                    </td>
+
+                    <td>{{ group['school_name'] }}</td>
+
+                    <td>{{ group['students_count'] }}</td>
+
+                    <td>{{ group['monthly_price'] }} грн</td>
+
+                    <td>{{ group['annual_price'] }} грн</td>
+
+                    <td>{{ group['single_price'] }} грн</td>
+
+                    <td>
+                        <div class="action-buttons">
+                            <a
+                                href="{{ url_for('group_edit', group_id=group['id']) }}"
+                                class="btn btn-small btn-secondary"
+                            >
+                                Редагувати
+                            </a>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('group_delete', group_id=group['id']) }}"
+                                onsubmit="return confirm('Точно видалити цю групу?');"
+                            >
+                                <button type="submit" class="btn btn-small btn-danger">
+                                    Видалити
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <h3>Груп поки немає</h3>
+        <p>Створи першу групу, щоб додавати учнів.</p>
+
+        <a href="{{ url_for('group_add') }}" class="btn btn-primary">
+            + Створити групу
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+```

@@ -1,0 +1,206 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Календар тренувань{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>
+            {% if school %}
+                Календар — {{ school['name'] }}
+            {% else %}
+                Календар тренувань
+            {% endif %}
+        </h1>
+        <p>Перегляд занять за тиждень або місяць.</p>
+    </div>
+
+    {% if school %}
+    <a href="{{ url_for('school_detail', school_id=school['id']) }}"
+       class="btn btn-secondary">
+        ← Назад до школи
+    </a>
+    {% else %}
+    <a href="{{ url_for('schools') }}" class="btn btn-secondary">
+        ← До шкіл
+    </a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="calendar-toolbar">
+        <div class="calendar-navigation">
+            <a
+                href="{{ url_for('calendar', year=prev_month.year, month=prev_month.month, view=view, school_id=school_id) }}"
+                class="btn btn-secondary">
+                ← Попередній місяць
+            </a>
+
+            <h2>{{ '%02d'|format(month) }}.{{ year }}</h2>
+
+            <a
+                href="{{ url_for('calendar', year=next_month.year, month=next_month.month, view=view, school_id=school_id) }}"
+                class="btn btn-secondary">
+                Наступний місяць →
+            </a>
+        </div>
+
+        <div class="calendar-view-switch">
+            <a
+                href="{{ url_for('calendar', year=year, month=month, view='week', school_id=school_id) }}"
+                class="btn {% if view == 'week' %}btn-primary{% else %}btn-secondary{% endif %}">
+                Тиждень
+            </a>
+
+            <a
+                href="{{ url_for('calendar', year=year, month=month, view='month', school_id=school_id) }}"
+                class="btn {% if view == 'month' %}btn-primary{% else %}btn-secondary{% endif %}">
+                Місяць
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Додати тренування</h2>
+    </div>
+
+    {% if groups %}
+    <form method="POST"
+          action="{{ url_for('training_add') }}">
+
+        <input type="hidden" name="school_id" value="{{ school_id or '' }}">
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="group_id">Група *</label>
+                <select id="group_id" name="group_id" required>
+                    <option value="">Обери групу</option>
+                    {% for group in groups %}
+                    <option value="{{ group['id'] }}">
+                        {{ group['name'] }} — {{ group['school_name'] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="training_date">Дата *</label>
+                <input
+                    type="date"
+                    id="training_date"
+                    name="training_date"
+                    value="{{ today.isoformat() }}"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="start_time">Час початку *</label>
+                <input
+                    type="time"
+                    id="start_time"
+                    name="start_time"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="end_time">Час завершення</label>
+                <input
+                    type="time"
+                    id="end_time"
+                    name="end_time">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примітки</label>
+            <textarea
+                id="notes"
+                name="notes"
+                rows="3"
+                placeholder="Наприклад, контрольне тренування"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            + Додати тренування
+        </button>
+    </form>
+
+    {% else %}
+    <div class="empty-state">
+        <p>Спочатку створи школу та групу.</p>
+        <a href="{{ url_for('schools') }}" class="btn btn-primary">
+            Перейти до шкіл
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>
+            {% if view == 'week' %}
+                Тренування за тиждень
+            {% else %}
+                Тренування за місяць
+            {% endif %}
+        </h2>
+    </div>
+
+    {% if trainings %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Час</th>
+                    <th>Група</th>
+                    <th>Школа</th>
+                    <th>Примітки</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for training in trainings %}
+                <tr>
+                    <td>{{ training['training_date'] }}</td>
+                    <td>
+                        {{ training['start_time'] }}
+                        {% if training['end_time'] %}
+                            – {{ training['end_time'] }}
+                        {% endif %}
+                    </td>
+                    <td>{{ training['group_name'] }}</td>
+                    <td>{{ training['school_name'] }}</td>
+                    <td>{{ training['notes'] or '—' }}</td>
+                    <td>
+                        <form
+                            method="POST"
+                            action="{{ url_for('training_delete', training_id=training['id']) }}"
+                            onsubmit="return confirm('Видалити це тренування?');">
+
+                            <input type="hidden" name="school_id" value="{{ school_id or '' }}">
+
+                            <button type="submit" class="btn btn-small btn-danger">
+                                Видалити
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <h3>Тренувань поки немає</h3>
+        <p>Додай перше тренування за допомогою форми вище.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+```

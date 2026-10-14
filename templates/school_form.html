@@ -1,0 +1,69 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}
+    {% if school %}Редагування школи{% else %}Додавання школи{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>
+            {% if school %}Редагування школи{% else %}Нова школа{% endif %}
+        </h1>
+        <p>Заповни основну інформацію про школу.</p>
+    </div>
+
+    <a href="{{ url_for('schools') }}" class="btn btn-secondary">
+        ← Назад до шкіл
+    </a>
+</div>
+
+<div class="card form-card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="name">Назва школи *</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Наприклад, Спортивна школа №1"
+                value="{{ school['name'] if school else '' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="address">Адреса</label>
+            <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Місто, вулиця, номер будинку"
+                value="{{ school['address'] if school else '' }}"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примітки</label>
+            <textarea
+                id="notes"
+                name="notes"
+                rows="4"
+                placeholder="Додаткова інформація про школу"
+>{% if school and school['notes'] %}{{ school['notes'] }}{% endif %}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if school %}Зберегти зміни{% else %}Додати школу{% endif %}
+            </button>
+
+            <a href="{{ url_for('schools') }}" class="btn btn-secondary">
+                Скасувати
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+```

@@ -1,0 +1,89 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <a href="{{ url_for('schools') }}" class="btn btn-secondary">
+        ← Назад до шкіл
+    </a>
+
+    <h1 style="margin-top: 20px;">{{ school['name'] }}</h1>
+
+    <p>
+        Адреса: {{ school['address'] or 'Не вказана' }}
+    </p>
+
+    {% if school['notes'] %}
+    <p>{{ school['notes'] }}</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Групи цієї школи</h2>
+
+    <p>Тут відображаються тільки групи школи «{{ school['name'] }}».</p>
+
+    <a
+        href="{{ url_for('group_add') }}?school_id={{ school['id'] }}"
+        class="btn"
+    >
+        + Додати групу
+    </a>
+    ```html
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+    <a href="{{ url_for('students', school_id=school['id']) }}"
+       class="btn">
+        Спортсмени
+    </a>
+
+    <a href="{{ url_for('calendar', school_id=school['id']) }}"
+       class="btn btn-secondary">
+        Календар тренувань
+    </a>
+
+    <a href="{{ url_for('payments', school_id=school['id']) }}"
+       class="btn btn-secondary">
+        Оплати
+    </a>
+</div>
+```
+</div>
+
+<div class="groups-grid">
+    {% for group in groups %}
+    <div class="group-card">
+        <h3>{{ group['name'] }}</h3>
+
+        <p>
+            Спортсменів: {{ group['students_count'] }}
+        </p>
+
+        <p>
+            Місячний абонемент:
+            {{ group['monthly_price'] }} грн
+        </p>
+
+        <p>
+            Річний внесок:
+            {{ group['annual_price'] }} грн
+        </p>
+
+        <p>
+            Разове заняття:
+            {{ group['single_price'] }} грн
+        </p>
+
+        <a
+            href="{{ url_for('group_edit', group_id=group['id']) }}"
+            class="btn btn-secondary"
+        >
+            Редагувати групу
+        </a>
+    </div>
+    {% else %}
+    <div class="card">
+        <p>У цій школі ще немає груп. Натисни «Додати групу».</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

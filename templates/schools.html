@@ -1,0 +1,103 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Школи</h1>
+    <p>Кожна школа має власні групи, спортсменів і розклад тренувань.</p>
+</div>
+
+<div class="card">
+    <h2>Додати нову школу</h2>
+
+    <form action="{{ url_for('school_add') }}" method="POST">
+        <div class="form-group">
+            <label for="name">Назва школи</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Наприклад, ДЮСШ №1"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="address">Адреса школи</label>
+            <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Введи адресу"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Примітки</label>
+            <textarea
+                id="notes"
+                name="notes"
+                rows="2"
+                placeholder="Додаткова інформація"
+            ></textarea>
+        </div>
+
+        <button type="submit" class="btn">
+            + Додати школу
+        </button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Мої школи</h2>
+
+    {% if schools %}
+    <div class="schools-grid">
+        {% for school in schools %}
+        <div class="school-card">
+            <div class="school-icon">🏫</div>
+
+            <h3>{{ school['name'] }}</h3>
+
+            <p>
+                <strong>Адреса:</strong>
+                {{ school['address'] or 'Не вказана' }}
+            </p>
+
+            <p>
+                <strong>Груп:</strong>
+                {{ school['groups_count'] }}
+            </p>
+
+            <p>
+                <strong>Спортсменів:</strong>
+                {{ school['students_count'] }}
+            </p>
+
+
+            <a
+                class="btn school-open-btn"
+                href="{{ url_for('school_detail', school_id=school['id']) }}"
+            >
+                Відкрити школу →
+            </a>
+
+            <form
+                action="{{ url_for('school_delete', school_id=school['id']) }}"
+                method="POST"
+                onsubmit="return confirm('Точно хочеш видалити школу «{{ school['name'] }}»? Переконайся, що тобі більше не потрібні її дані.');"
+                style="margin-top: 10px;"
+            >
+                <button type="submit" class="btn btn-danger">
+                    🗑 Видалити школу
+                </button>
+            </form>
+
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Шкіл поки немає. Додай першу школу за допомогою форми вище.</p>
+    {% endif %}
+</div>
+{% endblock %}
